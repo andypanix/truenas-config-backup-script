@@ -156,6 +156,7 @@ else:
     logging.error(
         "SCHEDULED_TIME environment variable is not set. Backup will not run."
     )
+    sys.exit(1)
 
 # Print message before starting the backup
 print("Starting backup service in background mode...")
