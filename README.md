@@ -1,7 +1,30 @@
 This script is designed to automate the process of creating backups of your TrueNAS configuration and deleting old backups once a specified limit is reached. The script uses environment variables to configure various settings, such as the server URL, API key, backup location, and the maximum number of backup files to keep. Here's a simple explanation of the main components of the script:
 
+## Setup Instructions
+
+1. Copy the provided `.env.template` file to `.env`:
+   ```bash
+   cp .env.template .env
+   ```
+2. Open the `.env` file and populate it with your specific values (TrueNAS URL, API Key, path, etc.).
+3. Build and start the container using Docker Compose:
+   ```bash
+   docker compose up -d --build
+   ```
+
+## Security Considerations (API Key)
+
+⚠️ **IMPORTANT:** In TrueNAS CORE (and older versions of SCALE), downloading the system configuration with the `secretseed` requires administrative privileges. This means the API Key you provide in the `.env` file usually has **root-level access** to your NAS.
+
+To protect your system, strongly adhere to these best practices:
+1. **Protect your `.env` file:** Never commit your `.env` file to version control (it is ignored by default via `.gitignore`). Ensure the file permissions on your Docker host are restrictive (e.g., `chmod 600 .env`).
+2. **Restrict Network Access:** Ensure your TrueNAS management interface (ports 80/443) is not exposed to the public internet.
+3. **IP Firewalling (Recommended):** Since the API Key has root privileges, configure a firewall rule on your TrueNAS network settings to reject API calls unless they originate from the specific IP address of the machine running this Docker container.
+
+## How It Works
+
 Import required libraries: The script imports various libraries needed for its functionality, such as os, subprocess, requests, schedule, time, logging, datetime, and dotenv.
-Load environment variables: The script uses the dotenv library to load environment variables from a .env file, which contains user-configurable variables like the server URL, API key, secret seed, backup location, maximum number of backup files, and scheduled time for the backup.
+Load environment variables: The script uses the dotenv library to load environment variables from the `.env` file, which contains user-configurable variables like the server URL, API key, secret seed, backup location, maximum number of backup files, and scheduled time for the backup.
 
 Create the backup directory: The script creates a directory for storing backup files using the os.makedirs() function.
 
