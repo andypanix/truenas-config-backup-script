@@ -48,8 +48,7 @@ def send_telegram_alert(message):
         url = f"https://api.telegram.org/bot{telegram_bot_token}/sendMessage"
         payload = {
             "chat_id": telegram_chat_id,
-            "text": f"🚨 *TrueNAS Backup Error*\n\n{message}",
-            "parse_mode": "Markdown",
+            "text": f"🚨 TrueNAS Backup Error\n\n{message}",
         }
         response = requests.post(url, json=payload, timeout=10)
         response.raise_for_status()
