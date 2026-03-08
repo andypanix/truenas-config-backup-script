@@ -1,14 +1,9 @@
-version: '3'
 services:
   truenas-backup-config:
-    image: reeeeegis/truenas-backup-config
+    build: .
     container_name: truenas-backup-config
-    environment:
-      - API_KEY=1-GDePtgDAEDtqf2NE8svx34ijI4sRkJjNRXoV1cQEMqBeAqrWBvcBVeg4q2xuWP0I
-      - SEC_SEED=true
-      - BACKUPLOC=/app/truenas-backup
-      - MAXNR_OF_FILES=14
-      - SERVER_URL=https://truenas.homelabing.com
-      - SCHEDULED_TIME=03:00
+    restart: unless-stopped
+    env_file:
+      - .env
     volumes:
-      - /mnt/truenas-backup:/app/truenas-backup
+      - ./truenas-backup:/app/truenas-backup
