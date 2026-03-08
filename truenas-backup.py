@@ -79,7 +79,7 @@ def backup():
         # Generate file name
         file_name = f"{subprocess.check_output('hostname').decode().strip()}-TrueNAS-{datetime.now().strftime('%Y%m%d%H%M%S')}.{file_ext}"
 
-        logging.info(f"Requesting backup from TrueNAS API...")
+        logging.info("Requesting backup from TrueNAS API...")
         response = requests.post(
             f"{server_url}/api/v2.0/config/save",
             headers={
