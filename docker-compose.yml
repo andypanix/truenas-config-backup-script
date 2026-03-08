@@ -3,6 +3,7 @@ services:
   truenas-backup-config:
     image: reeeeegis/truenas-backup-config
     container_name: truenas-backup-config
+    restart: unless-stopped
     environment:
       - API_KEY=1-GDePtgDAEDtqf2NE8svx34ijI4sRkJjNRXoV1cQEMqBeAqrWBvcBVeg4q2xuWP0I
       - SEC_SEED=true
@@ -10,5 +11,9 @@ services:
       - MAXNR_OF_FILES=14
       - SERVER_URL=https://truenas.homelabing.com
       - SCHEDULED_TIME=03:00
+      # Optional DR Notifications
+      # - UPTIME_KUMA_URL=http://uptime.panix.cloud:88/api/push/...
+      # - TELEGRAM_BOT_TOKEN=your_token
+      # - TELEGRAM_CHAT_ID=your_chat_id
     volumes:
       - /mnt/truenas-backup:/app/truenas-backup
