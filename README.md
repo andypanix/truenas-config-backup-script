@@ -39,6 +39,19 @@ The script optionally supports Disaster Recovery (DR) level notifications:
 1. **Passive Monitoring (Uptime Kuma):** You can set `UPTIME_KUMA_URL` to a Push monitor URL. The script will ping this URL *only* when a backup succeeds. If Uptime Kuma doesn't receive this ping within your scheduled timeframe (e.g. 24h), it can trigger its own alerts.
 2. **Active Error Alerting (Telegram):** If you configure `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`, the script will send a direct message to that Telegram chat if any error occurs during the backup process (network issue, API error, disk write permission, etc.).
 
+### Manual / Instant Backup
+By default, the script runs as a background daemon, waiting for the `SCHEDULED_TIME`. If you want to force an immediate backup (e.g., to test credentials or before performing a system upgrade), you can run the script with the `--now` flag.
+
+If the container is already running:
+```bash
+docker exec -it truenas-backup-config python truenas-backup.py --now
+```
+
+If the container is not running (creates a temporary container that deletes itself after execution):
+```bash
+docker compose run --rm truenas-backup-config python truenas-backup.py --now
+```
+
 Schedule the backup function: The script uses the schedule library to schedule the backup() function to run at the specified time every day.
 Keep the script running: The script continuously runs the scheduled tasks using a while loop, which checks for pending tasks and sleeps for one second between checks.
 The script is designed to run indefinitely, creating new backups and deleting old ones according to the specified schedule and maximum number of backup files allowed.

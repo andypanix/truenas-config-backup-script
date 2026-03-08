@@ -4,6 +4,8 @@ import requests
 import schedule
 import time
 import logging
+import argparse
+import sys
 from datetime import datetime
 from dotenv import load_dotenv
 import urllib3
@@ -121,12 +123,31 @@ def backup():
 
         logging.info("Backup completed successfully.")
         uptime_kuma_ping()
+        return True
 
     except Exception as e:
         error_msg = f"Backup failed: {str(e)}"
         logging.error(error_msg)
         send_telegram_alert(error_msg)
+        return False
 
+
+# Parse command line arguments
+parser = argparse.ArgumentParser(description="TrueNAS Config Backup Script")
+parser.add_argument(
+    "--now", action="store_true", help="Run backup immediately and exit"
+)
+args = parser.parse_args()
+
+if args.now:
+    logging.info("Running manual one-shot backup (--now flag provided)...")
+    success = backup()
+    if success:
+        logging.info("Manual backup finished successfully. Exiting.")
+        sys.exit(0)
+    else:
+        logging.error("Manual backup failed. Exiting with error code 1.")
+        sys.exit(1)
 
 # Schedule the backup function
 if scheduled_time:
@@ -138,7 +159,7 @@ else:
     )
 
 # Print message before starting the backup
-print("Starting backup service...")
+print("Starting backup service in background mode...")
 
 # Keep the script running
 while True:
